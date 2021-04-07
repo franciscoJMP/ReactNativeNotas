@@ -1,7 +1,11 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator, HeaderTitle} from '@react-navigation/stack';
-import {View, Text, StyleSheet} from 'react-native';
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItem,
+} from '@react-navigation/drawer';
 import DrawerHeaderButton from './DrawerHeaderButton';
 import {
   NotesScreen,
@@ -23,38 +27,47 @@ const headerConfig = {
     },
   },
 };
-const Notas = navigation => {
+function Notas({navigation}) {
   return (
     <Stack.Navigator screenOptions={headerConfig.defaultNavigationOptions}>
       <Stack.Screen
         name="notesscreen"
         component={NotesScreen}
-        options={{headerTitle: 'Notas', headerLeft: () => (<DrawerHeaderButton navigation={navigation}/>)}}></Stack.Screen>
+        options={{
+          headerTitle: 'Notas',
+          headerLeft: () => <DrawerHeaderButton navigation={navigation} />,
+        }}></Stack.Screen>
       <Stack.Screen
         name="notescreen"
         component={NoteScreen}
         options={{headerTitle: 'Nota'}}></Stack.Screen>
     </Stack.Navigator>
   );
-};
-const Ajustes = () => {
+}
+function Ajustes({navigation}) {
   return (
     <Stack.Navigator screenOptions={headerConfig.defaultNavigationOptions}>
       <Stack.Screen
         name="settingsscreen"
         component={SettingsScreen}
-        options={{headerTitle: 'Ajustes'}}></Stack.Screen>
+        options={{
+          headerTitle: 'Ajustes',
+          headerLeft: () => <DrawerHeaderButton navigation={navigation} />,
+        }}></Stack.Screen>
     </Stack.Navigator>
   );
-};
-const Categorias = () => {
+}
+function Categorias({navigation}) {
   return (
     <Stack.Navigator screenOptions={headerConfig.defaultNavigationOptions}>
       <Stack.Screen
         name="categoriesscreen"
         component={CategoriesScreen}
-        options={{headerTitle: 'Categorias'}}></Stack.Screen>
+        options={{
+          headerTitle: 'Categorias',
+          headerLeft: () => <DrawerHeaderButton navigation={navigation} />,
+        }}></Stack.Screen>
     </Stack.Navigator>
   );
-};
+}
 export {Notas, Ajustes, Categorias};
