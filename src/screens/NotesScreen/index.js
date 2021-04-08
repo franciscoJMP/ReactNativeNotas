@@ -4,9 +4,6 @@ import basicStyles from 'ReactNativeNotas/src/styles/basicStyles';
 import NoteGridItem from 'ReactNativeNotas/src/screens/NotesScreen/NoteGridItem';
 import FAB from 'ReactNativeNotas/src/components/FAB';
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 50,
-  },
   list: {
     width: '100%',
   },
@@ -57,11 +54,12 @@ export default class NotesScreen extends Component {
   openNote = note => {
     this.props.navigation.navigate('notescreen', {
       note: note,
+      title: note ? 'Editar Nota' : 'Nueva Nota',
     });
   };
   render() {
     return (
-      <View style={[basicStyles.container, styles.container]}>
+      <View style={basicStyles.container}>
         <FlatList
           style={styles.list}
           data={notas}
@@ -71,7 +69,7 @@ export default class NotesScreen extends Component {
             <NoteGridItem note={item} onPress={this.openNote} />
           )}
         />
-        <FAB text="+" onPress={this.openNote} />
+        <FAB text="+" onPress={() => this.openNote(null)} />
       </View>
     );
   }

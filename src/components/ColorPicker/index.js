@@ -2,6 +2,8 @@ import React from 'react';
 import {Text, View, Modal, StyleSheet} from 'react-native';
 import ColorPalette from 'react-native-color-palette';
 import basicStyles from 'ReactNativeNotas/src/styles/basicStyles';
+import withColors from 'ReactNativeNotas/src/styles/withColors';
+import {colors} from '../../styles/withColors';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,6 +26,7 @@ const ColorPicker = ({
   onChange,
   visible,
   onRequestClose,
+  colors,
 }) => {
   return (
     <Modal
@@ -34,10 +37,10 @@ const ColorPicker = ({
       <View style={styles.container}>
         <View style={[basicStyles.paper, styles.content]}>
           <ColorPalette
-            title={"Elige un color"}
+            title={'Elige un color'}
             onChange={onChange}
             defaultColor={selectedColor || ''}
-            colors={['#FFB3BA', '#FFDEB9', '#FFFFB9', '#B9FFC9', '#BAE0FF']}
+            colors={colors.categoryColors}
             paletteStyles={{
               justifyContent: 'center',
               alignItems: 'center',
@@ -49,4 +52,4 @@ const ColorPicker = ({
   );
 };
 
-export default ColorPicker;
+export default withColors(ColorPicker);

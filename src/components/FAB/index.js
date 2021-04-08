@@ -1,8 +1,8 @@
 import React from 'react';
 import {Text, TouchableOpacity, StyleSheet} from 'react-native';
+import withColors from 'ReactNativeNotas/src/styles/withColors';
 
 const size = 50;
-
 const styles = StyleSheet.create({
   container: {
     height: size,
@@ -25,6 +25,9 @@ const styles = StyleSheet.create({
     color: '#fff',
   },
 });
+
+
+
 const FAB = props => {
   const {
     style,
@@ -38,10 +41,20 @@ const FAB = props => {
     ...otherProps
   } = props;
   return (
-    <TouchableOpacity style={styles.container} {...otherProps}>
+    <TouchableOpacity
+      style={[
+        styles.container,
+        {
+          backgroundColor:
+            (primary && colors.primary) ||
+            (secondary && colors.secondary) ||
+            (accent && colors.accent) || colors.primary
+        },
+      ]}
+      {...otherProps}>
       <Text style={styles.text}>{text}</Text>
     </TouchableOpacity>
   );
 };
 
-export default FAB;
+export default withColors(FAB);

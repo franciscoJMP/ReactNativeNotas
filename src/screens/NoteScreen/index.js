@@ -5,14 +5,19 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  LogBox,
 } from 'react-native';
 import basicStyles from 'ReactNativeNotas/src/styles/basicStyles';
-import {HR, CategoryPicker} from 'ReactNativeNotas/src/components';
+import {
+  HR,
+  CategoryPicker,
+  ColorView,
+  Button,
+} from 'ReactNativeNotas/src/components';
 
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-start',
-    marginTop: 50,
   },
   input: {
     width: '90%',
@@ -36,21 +41,29 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  colorView: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    margin: 5,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin: 50,
   },
 });
-
+LogBox.ignoreLogs([
+  'Non-serializable values were found in the navigation state',
+]);
 class NoteScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
       note: props.route.params.note,
+      title: props.route.params.title,
       modalVisible: false,
     };
+  }
+  init() {
+    this.props.navigation.setOptions({headerTitle: this.state.title});
+  }
+  componentDidMount() {
+    this.init();
   }
 
   toggleCategoryPicker = () => {
@@ -68,7 +81,8 @@ class NoteScreen extends Component {
   };
   render() {
     const {note, modalVisible} = this.state;
-    const {title, text, created, category} = note;
+    const {title, text, created, category} = note || {};
+
     return (
       <View style={[basicStyles.container, styles.container]}>
         <View style={styles.timestamp}>
@@ -78,7 +92,7 @@ class NoteScreen extends Component {
             </Text>
           )}
         </View>
-        <Text style={basicStyles.title}> Crear Una Nota</Text>
+        <Text style={basicStyles.title}>{title || 'Nueva Nota'}</Text>
         <TextInput
           style={[styles.input, styles.title]}
           placeholder="Título"
@@ -98,14 +112,19 @@ class NoteScreen extends Component {
           onPress={this.toggleCategoryPicker}>
           {category && (
             <React.Fragment>
-              <View
-                style={[styles.colorView, {backgroundColor: category.color}]}
-              />
+              <ColorView color={category.color} />
               <Text>{category.category}</Text>
             </React.Fragment>
           )}
           {!category && <Text>Elige categoría</Text>}
         </TouchableOpacity>
+        <View style={styles.buttonContainer}>
+          <View style={{marginRight:30}}>
+            <Button primary title="Guardar" />
+          </View>
+
+          <Button danger title="Eliminar" />
+        </View>
 
         <CategoryPicker
           visible={modalVisible}

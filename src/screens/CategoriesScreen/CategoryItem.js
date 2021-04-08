@@ -1,25 +1,20 @@
 import React from 'react';
 import {
-  Text,
   View,
   StyleSheet,
   TouchableOpacity,
   TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {ColorView} from 'ReactNativeNotas/src/components';
 
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    // justifyContent: "space-between",
+    
     alignItems: 'center',
     paddingLeft: 10,
     paddingRight: 10,
-  },
-  colorView: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
   },
   text: {
     flex: 1,
@@ -33,7 +28,7 @@ const CategoryItem = ({item, openChangeColor}) => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => openChangeColor(item)}>
-        <View style={[styles.colorView, {backgroundColor: color}]} />
+        <ColorView color={color} />
       </TouchableOpacity>
       <TextInput style={styles.text} value={category} />
       <TouchableOpacity>

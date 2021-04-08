@@ -15,8 +15,8 @@ export default function AppNavigator() {
         }}
         drawerContent={props => <CustomDrawer {...props} />}>
         <Drawer.Screen name="Notas" component={Notas}></Drawer.Screen>
-        <Drawer.Screen name="Ajustes" component={Ajustes}></Drawer.Screen>
         <Drawer.Screen name="Categorias" component={Categorias}></Drawer.Screen>
+        <Drawer.Screen name="Ajustes" component={Ajustes}></Drawer.Screen>
       </Drawer.Navigator>
     </NavigationContainer>
   );

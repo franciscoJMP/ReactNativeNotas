@@ -1,6 +1,7 @@
 import React from 'react';
 import {Text, View, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import basicStyles from 'ReactNativeNotas/src/styles/basicStyles';
+import withColors from 'ReactNativeNotas/src/styles/withColors';
 
 const styles = StyleSheet.create({
   container: {

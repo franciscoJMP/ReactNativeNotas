@@ -1,12 +1,5 @@
-import React, {Component} from 'react';
-import {View, Text} from 'react-native';
-import basicStyles from 'ReactNativeNotas/src/styles/basicStyles';
-export default class SettingsScreen extends Component {
-  render() {
-    return (
-      <View style={basicStyles.container}>
-        <Text> Ajustes</Text>
-      </View>
-    );
-  }
-}
+import Screen1 from './Screen1';
+import Screen2 from './Screen2';
+import Screen3 from './Screen3';
+
+export {Screen1,Screen2,Screen3};

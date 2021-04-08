@@ -9,8 +9,10 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import basicStyles from 'ReactNativeNotas/src/styles/basicStyles';
-import {HR, ColorPicker} from 'ReactNativeNotas/src/components';
+import {HR, ColorPicker, ColorView} from 'ReactNativeNotas/src/components';
 import CategoryItem from './CategoryItem';
+import withColors from 'ReactNativeNotas/src/styles/withColors';
+
 const styles = StyleSheet.create({
   container: {
     justifyContent: 'flex-start',
@@ -26,12 +28,6 @@ const styles = StyleSheet.create({
   },
   addInput: {
     flex: 1,
-  },
-  colorView: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
-    margin: 5,
   },
 });
 const categories = [
@@ -49,7 +45,7 @@ class CategoriesScreen extends Component {
 
     this.defaultNewCat = {
       category: null,
-      color: '#B9FFC9',
+      color: props.colors.categoryColors[0],
     };
 
     this.state = {
@@ -106,11 +102,7 @@ class CategoriesScreen extends Component {
             onChangeText={this.updateNewCategory}
           />
           <TouchableOpacity onPress={() => this.openChangeColor(null)}>
-            <View
-              style={[
-                styles.colorView,
-                {backgroundColor: newCategory.color},
-              ]}></View>
+            <ColorView color={newCategory.color} />
           </TouchableOpacity>
           <Button title="+" />
         </View>
@@ -120,7 +112,6 @@ class CategoriesScreen extends Component {
           data={categories}
           keyExtractor={item => item.id.toString()}
           renderItem={({item}) => (
-            
             <CategoryItem item={item} openChangeColor={this.openChangeColor} />
           )}
           ItemSeparatorComponent={() => <HR color="#aaa" size="100%" />}
@@ -135,4 +126,4 @@ class CategoriesScreen extends Component {
     );
   }
 }
-export default CategoriesScreen;
+export default withColors(CategoriesScreen);
