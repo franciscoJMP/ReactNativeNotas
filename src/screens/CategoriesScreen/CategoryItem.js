@@ -23,15 +23,15 @@ const styles = StyleSheet.create({
   },
 });
 
-const CategoryItem = ({item, openChangeColor}) => {
+const CategoryItem = ({item, openChangeColor,onChangeText,onRemove}) => {
   const {category, color} = item;
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => openChangeColor(item)}>
         <ColorView color={color} />
       </TouchableOpacity>
-      <TextInput style={styles.text} value={category} />
-      <TouchableOpacity>
+      <TextInput style={styles.text} onChangeText={onChangeText} value={category} />
+      <TouchableOpacity onPress={onRemove}>
         <Icon name="delete" size={25} />
       </TouchableOpacity>
     </View>

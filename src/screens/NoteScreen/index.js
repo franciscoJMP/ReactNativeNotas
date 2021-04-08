@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   LogBox,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import basicStyles from 'ReactNativeNotas/src/styles/basicStyles';
 import {
   HR,
@@ -14,6 +16,11 @@ import {
   ColorView,
   Button,
 } from 'ReactNativeNotas/src/components';
+import {
+  addNote,
+  updateNote,
+  removeNote,
+} from 'ReactNativeNotas/src/redux/reducers/noteReducer';
 
 const styles = StyleSheet.create({
   container: {
@@ -29,6 +36,7 @@ const styles = StyleSheet.create({
   note: {
     fontSize: 16,
     textAlignVertical: 'top',
+    borderWidth: 3,
   },
   timestamp: {
     width: '100%',
@@ -72,27 +80,44 @@ class NoteScreen extends Component {
 
   handleChangeColor = category => {
     this.setState({modalVisible: false});
-    this.updateNoteState({category});
+    this.updateNoteState({categoryId: category.id});
   };
 
   updateNoteState = property => {
     const newNote = {...this.state.note, ...property};
     this.setState({note: newNote});
   };
+
+  saveNote = () => {
+    const {note} = this.state;
+    if (note.id) {
+      this.props.updateNote(note);
+    } else {
+      const resp = this.props.addNote(note);
+    }
+    this.props.navigation.goBack();
+  };
+
+  removeNote = () => {
+    this.props.removeNote(this.state.note.id);
+    this.props.navigation.goBack();
+  };
+  getCategory = categoryId =>
+    this.props.categories.find(c => c.id === categoryId);
+
   render() {
     const {note, modalVisible} = this.state;
-    const {title, text, created, category} = note || {};
-
+    const {id, title, description, created, categoryId} = note || {};
+    const category = this.getCategory(categoryId);
     return (
       <View style={[basicStyles.container, styles.container]}>
         <View style={styles.timestamp}>
           {created && (
             <Text>
-              {created.toLocaleTimeString()} - {created.toLocaleDateString()}
+              {new Date(created).toLocaleTimeString()} -{" "} {new Date(created).toLocaleDateString()}
             </Text>
           )}
         </View>
-        <Text style={basicStyles.title}>{title || 'Nueva Nota'}</Text>
         <TextInput
           style={[styles.input, styles.title]}
           placeholder="Título"
@@ -103,9 +128,10 @@ class NoteScreen extends Component {
         <TextInput
           styles={[styles.input, styles.note]}
           placeholder="Nota"
-          value={text}
+          value={description}
           multiline={true}
           numberOfLines={4}
+          onChangeText={description => this.updateNoteState({description})}
         />
         <TouchableOpacity
           style={styles.categoryRow}
@@ -119,11 +145,11 @@ class NoteScreen extends Component {
           {!category && <Text>Elige categoría</Text>}
         </TouchableOpacity>
         <View style={styles.buttonContainer}>
-          <View style={{marginRight:30}}>
-            <Button primary title="Guardar" />
+          <View style={{marginRight: 30}}>
+            <Button primary title="Guardar" onPress={this.saveNote} />
           </View>
 
-          <Button danger title="Eliminar" />
+          {id && <Button danger title="Eliminar" onPress={this.removeNote} />}
         </View>
 
         <CategoryPicker
@@ -136,4 +162,20 @@ class NoteScreen extends Component {
   }
 }
 
-export default NoteScreen;
+const mapStateToProps = state => {
+  return {
+    categories: state.categories,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      addNote,
+      updateNote,
+      removeNote,
+    },
+    dispatch,
+  );
+};
+export default connect(mapStateToProps, mapDispatchToProps)(NoteScreen);

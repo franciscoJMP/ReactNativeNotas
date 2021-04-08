@@ -1,17 +1,24 @@
 import React, {Component} from 'react';
 import {
   View,
-  Text,
   StyleSheet,
   TextInput,
   Button,
   FlatList,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import basicStyles from 'ReactNativeNotas/src/styles/basicStyles';
 import {HR, ColorPicker, ColorView} from 'ReactNativeNotas/src/components';
 import CategoryItem from './CategoryItem';
 import withColors from 'ReactNativeNotas/src/styles/withColors';
+import {
+  addCategory,
+  updateCategory,
+  removeCategory,
+} from 'ReactNativeNotas/src/redux/reducers/categoriesReducer';
 
 const styles = StyleSheet.create({
   container: {
@@ -30,15 +37,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 });
-const categories = [
-  {
-    id: 1,
-    category: 'Personal',
-    color: '#FFB3BA',
-  },
-  {id: 2, category: 'Trabajo', color: '#FFDEB9'},
-  {id: 3, category: 'Casa', color: '#FFFFB9'},
-];
+
 class CategoriesScreen extends Component {
   constructor(props) {
     super(props);
@@ -63,11 +62,32 @@ class CategoriesScreen extends Component {
   };
 
   handleChangeColor = color => {
-    this.setState({modalVisible: false, itemSelected: null});
+    const {itemSelected} = this.state;
+    if (itemSelected) {
+      // Actualizar seleccionada
+      this.props.updateCategory({
+        ...itemSelected,
+        color,
+      });
+      this.setState({modalVisible: false, itemSelected: null});
+    } else {
+      // Actualizar nueva
+      this.setState({
+        modalVisible: false,
+        newCategory: {...this.state.newCategory, color},
+      });
+    }
   };
+
   updateNewCategory = category => {
     this.setState({newCategory: {...this.state.newCategory, category}});
   };
+
+  addCategory = () => {
+    this.props.addCategory(this.state.newCategory);
+    this.setState({newCategory: this.defaultNewCat});
+  };
+
   updateCategoryName = (category, name) => {
     this.props.updateCategory({
       ...category,
@@ -88,10 +108,12 @@ class CategoriesScreen extends Component {
         },
       ],
     );
+   
   };
 
   render() {
     const {modalVisible, itemSelected, newCategory} = this.state;
+    const {categories} = this.props;
     return (
       <View style={[basicStyles.container, styles.container]}>
         <View style={styles.row}>
@@ -104,7 +126,7 @@ class CategoriesScreen extends Component {
           <TouchableOpacity onPress={() => this.openChangeColor(null)}>
             <ColorView color={newCategory.color} />
           </TouchableOpacity>
-          <Button title="+" />
+          <Button title="+" onPress={this.addCategory}/>
         </View>
         <HR />
         <FlatList
@@ -112,7 +134,12 @@ class CategoriesScreen extends Component {
           data={categories}
           keyExtractor={item => item.id.toString()}
           renderItem={({item}) => (
-            <CategoryItem item={item} openChangeColor={this.openChangeColor} />
+            <CategoryItem
+              item={item}
+              openChangeColor={this.openChangeColor}
+              onChangeText={text => this.updateCategoryName(item, text)}
+              onRemove={() => this.removeCategory(item)}
+            />
           )}
           ItemSeparatorComponent={() => <HR color="#aaa" size="100%" />}
         />
@@ -126,4 +153,25 @@ class CategoriesScreen extends Component {
     );
   }
 }
-export default withColors(CategoriesScreen);
+
+const mapStateToProps = state => {
+  return {
+    categories: state.categories,
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return bindActionCreators(
+    {
+      addCategory,
+      updateCategory,
+      removeCategory,
+    },
+    dispatch,
+  );
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(withColors(CategoriesScreen));

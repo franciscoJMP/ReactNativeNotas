@@ -1,4 +1,6 @@
 import React from 'react';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {Text, View, Modal, StyleSheet, TouchableOpacity} from 'react-native';
 import basicStyles from 'ReactNativeNotas/src/styles/basicStyles';
 import withColors from 'ReactNativeNotas/src/styles/withColors';
@@ -30,29 +32,13 @@ const styles = StyleSheet.create({
   },
 });
 
-const categories = [
-  {
-    id: 1,
-    category: 'Personal',
-    color: '#FFB3BA',
-  },
-  {
-    id: 2,
-    category: 'Trabajo',
-    color: '#FFDEB9',
-  },
-  {
-    id: 3,
-    category: 'Casa',
-    color: '#FFFFB9',
-  },
-];
 
 const CategoryPicker = ({
   selectedCategory,
   onChange,
   visible,
   onRequestClose,
+  categories,
 }) => (
   <Modal
     animationType="fade"
@@ -78,4 +64,10 @@ const CategoryPicker = ({
   </Modal>
 );
 
-export default CategoryPicker;
+const mapStateToProps = state => {
+  return {
+    categories: state.categories,
+  };
+};
+
+export default connect(mapStateToProps)(CategoryPicker);
